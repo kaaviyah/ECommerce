@@ -6,18 +6,22 @@ import Cart from "./Cart";
 function ParentCard() {
     const [cartItems, setCartItems] = useState([]);
     const [showProductDetails, setShowProductDetails] = useState(false);
+    // const [products, setProducts] = useState([]);
+
+
     const handleProductButtonClick = () => {
         setShowProductDetails(true);
     }
     const handleCartButtonClick = () => {
         setShowProductDetails(false);
     }
-    const handleClick = (productNo) => {
-        console.log(`clicked card with Id :${productNo}`);
-    };
+    // const handleClick = (productNo) => {
+    //     console.log(`clicked card with Id :${productNo}`);
+    // };
 
     const handleCart = (product) => {
         // console.log(`Added ${pro.title} to the cart!`);
+
         const itemExists = cartItems.some(item => item.id === product.id);
         if (!itemExists) {
             setCartItems([...cartItems, product]);
@@ -31,31 +35,34 @@ function ParentCard() {
     }
 
     return (
-        <>
-            <nav className="navbar">
-                <h1 className="text">MegaMart</h1>
+        <div>
+            <>
+                <nav className="navbar">
+                    <h1 className="text">MegaMart</h1>
 
-                <div className="container">
-                    <button className="btn1" onClick={handleProductButtonClick}><h1>Products</h1></button>
-                    <button className="btn2" onClick={handleCartButtonClick}><h1>Cart</h1></button>
-                </div>
+                    <div className="container">
+                        <button className="btn1" onClick={handleProductButtonClick}><h1>Products</h1></button>
+                        <button className="btn2" onClick={handleCartButtonClick}><h1>Cart</h1></button>
+                    </div>
 
-            </nav>
-            {
-                showProductDetails ?
+                </nav>
 
-                    <Cards
-                        handleCart={handleCart}
-                        handleClick={handleClick}
-                        cartItems={cartItems}
-                    /> :
-                    <Cart cartItems={cartItems}
-                        removeFromCart={removeFromCart}
-                    />
-            }
-        </>
+                {
+                    showProductDetails ?
 
-    )
+                        <Cards
+
+                            handleCart={handleCart}
+                        /> :
+                        <Cart cartItems={cartItems}
+                            removeFromCart={removeFromCart}
+                        />
+                }
+            </>
+        </div>
+
+
+    );
 
 }
 export default ParentCard;

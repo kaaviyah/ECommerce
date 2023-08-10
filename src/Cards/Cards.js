@@ -6,7 +6,14 @@ import "./Cards.css";
 const Cards = ({ handleCart }) => {
   const [products, setProducts] = useState([]);
 
-
+  const handleAddToCart = (product) => {
+    const isAlreadyInCart = products.some(p => p.id === product.id && p.addedToCart);
+    if (!isAlreadyInCart) {
+      const updatedProducts = products.map(p => p.id === product.id ? { ...p, addedToCart: true } : p);
+      setProducts(updatedProducts);
+      handleCart(product);
+    }
+  };
   useEffect(() => {
     axios
       .get("https://fakestoreapi.com/products")
@@ -33,8 +40,13 @@ const Cards = ({ handleCart }) => {
 
             <p className="description">{pro.description}</p>
             <span>$ {pro.price}</span>
-            <button className="cart-button" onClick={() => handleCart(pro)}>
-              Add to Cart
+            <button className="cart-button" onClick={() => handleAddToCart(pro)}
+              disabled={pro.addedToCart}
+            >
+              {
+                pro.addedToCart ? "Added to Cart" : "Add to Cart"
+              }
+
             </button>
           </div>
         ))}
