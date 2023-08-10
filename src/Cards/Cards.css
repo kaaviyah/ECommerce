@@ -107,6 +107,7 @@ button {
 
 }
 
+
 @media(max-width:768px) {
   .product-cards {
     justify-content: center;

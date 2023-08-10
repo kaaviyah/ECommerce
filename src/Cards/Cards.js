@@ -1,6 +1,6 @@
 import React from "react";
 import "./Cards.css";
-const Cards = ({ products, handleAddToCart }) => {
+const Cards = ({ products, handleAddToCart, handleCart, removeFromCart, cartItems }) => {
   return (
     <div>
 
@@ -16,14 +16,14 @@ const Cards = ({ products, handleAddToCart }) => {
 
             <p className="description">{pro.description}</p>
             <span>$ {pro.price}</span>
-            <button className="cart-button" onClick={() => handleAddToCart(pro)}
-              disabled={pro.addedToCart}
-            >
-              {
-                pro.addedToCart ? "Added to Cart" : "Add to Cart"
-              }
 
-            </button>
+            {
+              pro.inCart ? (
+                <button onClick={() => handleCart(pro)} disabled>Added to Cart</button>
+              ) : (
+                <button onClick={() => handleCart(pro)}>Add to Cart</button>
+              )
+            }
           </div>
         ))}
       </div>

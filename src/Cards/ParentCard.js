@@ -6,19 +6,18 @@ import Cart from "./Cart";
 function ParentCard() {
     const [cartItems, setCartItems] = useState([]);
     const [showProductDetails, setShowProductDetails] = useState("Products");
-    // const [products, setProducts] = useState([]);
     const [products, setProducts] = useState([]);
 
-    const handleAddToCart = (product) => {
-        const isAlreadyInCart = products.some(p => p.id === product.id && p.addedToCart);
-        if (!isAlreadyInCart) {
-            const updatedProducts = products.map(p => p.id === product.id ? { ...p, addedToCart: true } : p);
-            setProducts(updatedProducts);
-            handleCart(product);
+    // const handleAddToCart = (product) => {
+    //     const isAlreadyInCart = products.some(p => p.id === product.id && p.addedToCart);
+    //     if (!isAlreadyInCart) {
+    //         const updatedProducts = products.map(p => p.id === product.id ? { ...p, addedToCart: true } : p);
+    //         setProducts(updatedProducts);
+    //         handleCart(product);
 
-        }
+    //     }
 
-    };
+    // };
     useEffect(() => {
         axios
             .get("https://fakestoreapi.com/products")
@@ -44,13 +43,30 @@ function ParentCard() {
         if (!itemExists) {
             setCartItems([...cartItems, product]);
         }
+        const updatedProducts = products.map(p => {
+            if (p.id === product.id) {
+                return { ...p, inCart: true };
+
+            }
+            return p;
+        });
+        setProducts(updatedProducts);
 
     };
     console.log(cartItems);
     const removeFromCart = (product) => {
         const updatedCart = cartItems.filter(item => item.id !== product.id);
         setCartItems(updatedCart);
-    }
+        const updatedProducts = products.map(p => {
+            if (p.id === product.id) {
+                return { ...p, inCart: false };
+
+            }
+            return p;
+        });
+        setProducts(updatedProducts);
+
+    };
 
     return (
         <>
@@ -76,7 +92,9 @@ function ParentCard() {
 
                             handleCart={handleCart}
                             products={products}
-                            handleAddToCart={handleAddToCart}
+                            // handleAddToCart={handleAddToCart}
+                            cartItems={cartItems}
+                            removeFromCart={removeFromCart}
                         />) : (
                             <Cart cartItems={cartItems}
                                 removeFromCart={removeFromCart}
