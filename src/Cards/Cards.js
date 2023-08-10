@@ -1,30 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import "./Cards.css";
-
-
-const Cards = ({ handleCart }) => {
-  const [products, setProducts] = useState([]);
-
-  const handleAddToCart = (product) => {
-    const isAlreadyInCart = products.some(p => p.id === product.id && p.addedToCart);
-    if (!isAlreadyInCart) {
-      const updatedProducts = products.map(p => p.id === product.id ? { ...p, addedToCart: true } : p);
-      setProducts(updatedProducts);
-      handleCart(product);
-    }
-  };
-  useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((res) => {
-        setProducts(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }, []);
-
+const Cards = ({ products, handleAddToCart }) => {
   return (
     <div>
 

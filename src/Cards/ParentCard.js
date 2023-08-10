@@ -1,24 +1,42 @@
 import React from "react";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Cards from "./Cards";
 import Cart from "./Cart";
 function ParentCard() {
     const [cartItems, setCartItems] = useState([]);
-    const [showProductDetails, setShowProductDetails] = useState(false);
+    const [showProductDetails, setShowProductDetails] = useState("Products");
     // const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState([]);
 
+    const handleAddToCart = (product) => {
+        const isAlreadyInCart = products.some(p => p.id === product.id && p.addedToCart);
+        if (!isAlreadyInCart) {
+            const updatedProducts = products.map(p => p.id === product.id ? { ...p, addedToCart: true } : p);
+            setProducts(updatedProducts);
+            handleCart(product);
 
-    const handleProductButtonClick = () => {
-        setShowProductDetails(true);
+        }
+
+    };
+    useEffect(() => {
+        axios
+            .get("https://fakestoreapi.com/products")
+            .then((res) => {
+                setProducts(res.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching products:", error);
+            });
+    }, []);
+
+    const handleProductButtonClick = (tab) => {
+        setShowProductDetails(tab);
+
     }
     const handleCartButtonClick = () => {
         setShowProductDetails(false);
     }
-    // const handleClick = (productNo) => {
-    //     console.log(`clicked card with Id :${productNo}`);
-    // };
-
     const handleCart = (product) => {
         // console.log(`Added ${pro.title} to the cart!`);
 
@@ -35,32 +53,41 @@ function ParentCard() {
     }
 
     return (
-        <div>
-            <>
+        <>
+
+            <div>
+
+
                 <nav className="navbar">
                     <h1 className="text">MegaMart</h1>
 
                     <div className="container">
-                        <button className="btn1" onClick={handleProductButtonClick}><h1>Products</h1></button>
-                        <button className="btn2" onClick={handleCartButtonClick}><h1>Cart</h1></button>
+                        <button type="button" className="btn1" onClick={() => handleProductButtonClick("Products")}><h1>Products</h1></button>
+                        <button type="button" className="btn2" onClick={() => handleCartButtonClick("Cart")}><h1>Cart</h1></button>
                     </div>
 
                 </nav>
 
                 {
-                    showProductDetails ?
 
-                        <Cards
+                    showProductDetails === "Products" ?
+
+                        (<Cards
 
                             handleCart={handleCart}
-                        /> :
-                        <Cart cartItems={cartItems}
-                            removeFromCart={removeFromCart}
-                        />
+                            products={products}
+                            handleAddToCart={handleAddToCart}
+                        />) : (
+                            <Cart cartItems={cartItems}
+                                removeFromCart={removeFromCart}
+                            />)
                 }
-            </>
-        </div>
 
+
+            </div>
+
+
+        </>
 
     );
 
